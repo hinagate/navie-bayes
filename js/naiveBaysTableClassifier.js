@@ -37,29 +37,42 @@ function probability(truth, c) {
     let _numeratorPString = `P(y=${truth})`
     let _denomPString = ''
 
-    let _numeratorOpString = `${probTable.classes[`P(y=${truth})`].frac}`
+    let _numeratorOpString = `(${probTable.classes[`P(y=${truth})`].frac})`
     let _denomOpString = ''
 
     let _numeratorResult = probTable.classes[`P(y=${truth})`].p.pos / probTable.classes[`P(y=${truth})`].p.total
-    let _denomResult = 1
+    let _denomResult = 0
     
     Object.keys(data.classes).forEach(function(cName) {
-
         let x = probTable.classes[`P(${cName}=${c[cName]}|y=${truth})`]
-        let u = probTable.classes[`P(${cName}=${c[cName]})`]
 
         _numeratorResult = _numeratorResult * (x.p.pos / x.p.total)
-        _denomResult = _denomResult * (u.p.pos / u.p.total)
 
-        _numeratorOpString += ` * ${x.frac}`
-        _denomOpString += `* ${u.frac}`
+        _numeratorOpString += `(${x.frac})`
 
-        _numeratorPString += `P(${cName}=${c[cName]}|y=${truth})`
-        _denomPString += `P(${cName}=${c[cName]})`
-        
+        _numeratorPString += `P(${cName}=${c[cName]}|y=${truth})`        
     })
+    console.log(probTable.yTruth.p)
+    Object.keys(probTable.yTruth.p).forEach(function(truth) {
+        let _pN = probTable.classes[`P(${truth})`].p.pos / probTable.classes[`P(${truth})`].p.total
+        _denomOpString += `(${probTable.classes[`P(${truth})`].p.pos}/${probTable.classes[`P(${truth})`].p.total})`
+        _denomPString += `P(${truth})`
+        
+        Object.keys(data.classes).forEach(function(cName) {
+            _pN = _pN * (probTable.classes[`P(${cName}=${c[cName]}|${truth})`].p.pos / probTable.classes[`P(${cName}=${c[cName]}|${truth})`].p.total)
+            _denomOpString += `(${probTable.classes[`P(${cName}=${c[cName]}|${truth})`].p.pos}/${probTable.classes[`P(${cName}=${c[cName]}|${truth})`].p.total})`
+            _denomPString += `P(${cName}=${c[cName]}|${truth})`
+        })
+       
+        _denomResult = _denomResult + _pN
+        _denomOpString += "+"
+        _denomPString += "+"
+        //_denomOpString += `+ P(a=${c.a}, b=${c.b}, c=${c.c}| y=${truth}) P(${truth})`
+    })
+
+
     
-    console.log(`${_numeratorPString} / ${_denomPString}`)
+    console.log(`${_numeratorPString}) / ${_denomPString}`)
     console.log(`${_numeratorOpString} / ${_denomOpString}`)
     console.log(`= ${_numeratorResult / _denomResult}`)
     return
