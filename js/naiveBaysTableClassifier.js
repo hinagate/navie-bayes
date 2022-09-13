@@ -47,7 +47,7 @@ function preProcess(){
     }
 
     // Possible truths (Binary):
-    let truths = [1, 0] // countUnique(data.y)
+    let truths = [1, 1,1] // countUnique(data.y)
 
     // P(y=1), P(y=0)
     truths.forEach(truth => {
