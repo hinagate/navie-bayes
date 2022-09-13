@@ -253,7 +253,7 @@ function main() {
 
 init()
 
-setParams({a:1, b:0, c:0})
+setParams({a:1, b:1, c:1})
 
 main()
 
